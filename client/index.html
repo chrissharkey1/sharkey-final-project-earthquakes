@@ -1,12 +1,48 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chris Sharkey - Earthquake tracking</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Earthquake Tracking - Chris Sharkey</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <div>
+      <header>
+        <h1>Earthquake Tracking - Chris Sharkey</h1>
+      </header>
+      <div>
+        <h2><u>Interactive Map</u></h2>
+        <h3>Filter earthquake results</h3>
+      </div>
+      <div id="inputs">
+        <p>
+          Earthquakes after
+          <input type="text" id="after" name="after" />
+          and before
+          <input type="text" id="before" name="before" /><br />
+          with a magnitude above
+          <input type="text" id="above" name="above" />
+          and below
+          <input type="text" id="below" name="below" />
+        </p>
+        <button>Filter</button><br /><br />
+      </div>
+    </div>
     <script src="./script.js"></script>
-</body>
+  </body>
 </html>
