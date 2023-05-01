@@ -9,17 +9,14 @@ function initMap() {
   return geoMap;
 }
 
-function placeMarker(array, map) {
-  console.log('array for markers', array);
-
+function placeCircle(array, map) {
   map.eachLayer((layer) => {
-      if (layer instanceof L.Marker) {
+      if (layer instanceof L.Circle) {
         layer.remove();
       }
     });
 
   array.forEach((item) => {
-      console.log('placeMarker', item);
       const {coordinates} = item.geometry;
       const magnitude = item.properties.mag;
 
@@ -38,6 +35,19 @@ function placeMarker(array, map) {
   })
 }
 
+async function filterCircles(afterQuery, beforeQuery, aboveQuery, belowQuery, geoMap) {
+  const queriedResults = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson' 
+    + afterQuery + beforeQuery + aboveQuery + belowQuery);
+  const newData = await queriedResults.json();
+  newElements = newData.features;
+  placeCircle(newElements, geoMap);  
+}
+
+var afterQuery = '';
+var beforeQuery = '';
+var aboveQuery = '';
+var belowQuery = '';
+
 //main async function
 async function mainEvent() {
   const filterButton = document.querySelector("#filter_button");
@@ -45,16 +55,63 @@ async function mainEvent() {
   const textBefore = document.querySelector('#before');
   const textMagAbove = document.querySelector('#above');
   const textMagBelow = document.querySelector('#below');
+  const resetButton = document.querySelector('#reset_button');
 
-  const geoMap = initMap();
+  var afterText = '';
+  var beforeText = '';
+  var aboveText = '';
+  var belowText = '';
 
-  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02');
+  let geoMap = initMap();
+
+  
+  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson');
   const currentData = await results.json();
   console.log(typeof currentData);
 
   elements = currentData.features;
 
-  placeMarker(elements, geoMap);
+  placeCircle(elements, geoMap);
+
+
+  textAfter.addEventListener('input', (event) => {
+    afterText = event.target.value;
+  });
+
+  textBefore.addEventListener('input', (event) => {
+    beforeText = event.target.value;
+  });
+
+  textMagAbove.addEventListener('input', (event) => {
+    aboveText = event.target.value;
+  });
+
+  textMagBelow.addEventListener('input', (event) => {
+    belowText = event.target.value;
+  });
+
+  //filterButton filters off of the API URL querying, may need to adjust later
+  filterButton.addEventListener('click', (event) => {
+    if (afterText.length != 0) {
+      afterQuery = '&starttime=' + afterText;
+    }
+    if (beforeText.length != 0) {
+      beforeQuery = '&endtime=' + beforeText;
+    }
+    if (aboveText.length != 0) {
+      aboveQuery = '&minmagnitude=' + aboveText;
+    }
+    if (belowText.length != 0) {
+      belowQuery = '&maxmagnitude=' + belowText;
+    }
+    filterCircles(afterQuery, beforeQuery, aboveQuery, belowQuery, geoMap);
+  });
+
+  resetButton.addEventListener("click", (event) => {
+    filterCircles('', '', '', '', geoMap);
+    var textInputs = document.querySelectorAll('input');
+    textInputs.forEach(input => input.value = '');
+});
 }
 
 document.addEventListener('DOMContentLoaded', async () => mainEvent());
