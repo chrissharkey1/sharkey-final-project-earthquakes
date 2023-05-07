@@ -35,12 +35,19 @@ function placeCircle(array, map) {
   })
 }
 
-async function filterCircles(afterQuery, beforeQuery, aboveQuery, belowQuery, geoMap) {
-  const queriedResults = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson' 
-    + afterQuery + beforeQuery + aboveQuery + belowQuery);
-  const newData = await queriedResults.json();
-  newElements = newData.features;
-  placeCircle(newElements, geoMap);  
+function dateToEpoch(date) {
+  return Date.parse(date);
+}
+
+function filterCircles(geoMap, array, afterQuery, beforeQuery, aboveQuery, belowQuery) {
+  newArray = [];
+  console.log('filterCircles');
+  array.filter((item) => {
+    if (item.properties.mag >= aboveQuery && item.properties.mag <= belowQuery && item.properties.time >= afterQuery && item.properties.time <= beforeQuery) { // 
+      newArray.push(item);
+    }
+  });
+  placeCircle(newArray, geoMap);
 }
 
 var afterQuery = '';
@@ -64,15 +71,16 @@ async function mainEvent() {
 
   let geoMap = initMap();
 
-  
   const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson');
   const currentData = await results.json();
   console.log(typeof currentData);
 
   elements = currentData.features;
-
+  console.log('elements type', typeof elements);
+//  localStorage.setItem('storedData', JSON.stringify(elements));
+//  const storedData = localStorage.getItem('storedData');
+//  console.log('storedData type', typeof storedData)
   placeCircle(elements, geoMap);
-
 
   textAfter.addEventListener('input', (event) => {
     afterText = event.target.value;
@@ -93,18 +101,29 @@ async function mainEvent() {
   //filterButton filters off of the API URL querying, may need to adjust later
   filterButton.addEventListener('click', (event) => {
     if (afterText.length != 0) {
-      afterQuery = '&starttime=' + afterText;
+      afterQuery = dateToEpoch(afterText);
+      console.log('after', afterQuery);
+    } else {
+      afterQuery = -12685939200000; //Jan 1 1568 is the first date in the dataset
     }
     if (beforeText.length != 0) {
-      beforeQuery = '&endtime=' + beforeText;
+      beforeQuery = dateToEpoch(beforeText);
+      console.log('before', beforeQuery);
+    } else {
+      beforeQuery = Math.floor(Date.now());
     }
     if (aboveText.length != 0) {
-      aboveQuery = '&minmagnitude=' + aboveText;
+      aboveQuery = aboveText;
+    } else {
+      aboveQuery = -2; //-1.4 is the min magnitude, but smaller magnitudes can be recorded in the future
     }
     if (belowText.length != 0) {
-      belowQuery = '&maxmagnitude=' + belowText;
+      belowQuery = belowText;
+    } else {
+      belowQuery = 10; //7.1 is the max magnitude, but larger magnitudes can be recorded in the future
     }
-    filterCircles(afterQuery, beforeQuery, aboveQuery, belowQuery, geoMap);
+    filterCircles(geoMap, elements, afterQuery, beforeQuery, aboveQuery, belowQuery);
+    //call with 'elements' as array
   });
 
   resetButton.addEventListener("click", (event) => {
