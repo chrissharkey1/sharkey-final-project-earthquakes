@@ -19,12 +19,18 @@ function placeCircle(array, map) {
   array.forEach((item) => {
       const {coordinates} = item.geometry;
       const magnitude = item.properties.mag;
+      const place = item.properties.place;
+
+      var epochSeconds = item.properties.time;
+      var epochMilli = epochSeconds / 1000;
+      var date = new Date(0);
+      date.setUTCSeconds(epochMilli);
 
       //adjusts magnitude to be judged by size on map
-      adjustedMagnitude = magnitude * 25000;
+      adjustedMagnitude = magnitude * 22000;
 
-      //adjusts fillOpacity based on magnitude -> -1.4 is the min magnitude in the JSON, max is 7.1
-      adjustedFill = (magnitude + 1.5) / 8.6;
+      //adjusts fillOpacity based on magnitude -> 7 is the min magnitude in the JSON
+      adjustedFill = (magnitude + 1.5) / 12;
 
       const circle = L.circle([coordinates[1], coordinates[0]], {
         color: 'red',
@@ -32,6 +38,10 @@ function placeCircle(array, map) {
         fillOpacity: adjustedFill,
         radius: adjustedMagnitude,
       }).addTo(map);
+
+      var popup = L.popup().setContent('(' + coordinates[1] + ', ' + coordinates[0] + ')<br> Magnitude: ' + 
+        magnitude + '<br> Timestamp: ' + date + '<br> Place: ' + place);
+      circle.bindPopup(popup).openPopup();
   })
 }
 
@@ -71,22 +81,18 @@ async function mainEvent() {
 
   let geoMap = initMap();
 
-  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2000-01-01&endtime=2023-05-10&minmagnitude=7');
-  const currentData = await results.json();
-  console.log(typeof currentData);
-  localStorage.setItem('storedData', JSON.stringify(currentData));
+  if (localStorage.getItem('storedData') === null) {
+    const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=0000-01-01&endtime=2100-01-01&minmagnitude=7.5');
+    const currentData = await results.json();
+    console.log(typeof currentData);
+    localStorage.setItem('storedData', JSON.stringify(currentData));
+  }
   const storedData = localStorage.getItem('storedData');
 
   let parsedData = JSON.parse(storedData);
   elements = parsedData.features;
 
   placeCircle(elements, geoMap);
-
-  loadDataButton.addEventListener('click', async (event) => {
-    console.log('loading data');
-
-
-  });
 
   textAfter.addEventListener('input', (event) => {
     afterText = event.target.value;
