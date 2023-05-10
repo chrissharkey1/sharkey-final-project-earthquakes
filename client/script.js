@@ -9,6 +9,12 @@ function initMap() {
   return geoMap;
 }
 
+async function storeOrginalData() {
+    const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=0000-01-01&endtime=2100-01-01&minmagnitude=7.5');
+    const currentData = await results.json();
+    localStorage.setItem('storedData', JSON.stringify(currentData));
+}
+
 function placeCircle(array, map) {
   map.eachLayer((layer) => {
       if (layer instanceof L.Circle) {
@@ -41,13 +47,21 @@ function placeCircle(array, map) {
 
       var popup = L.popup().setContent('(' + coordinates[1] + ', ' + coordinates[0] + ')<br> Magnitude: ' + 
         magnitude + '<br> Timestamp: ' + date + '<br> Place: ' + place);
-      circle.bindPopup(popup).openPopup();
+      circle.bindPopup(popup);
+      circle.on('mouseover', function (open) {
+        this.openPopup();
+      });
+      circle.on('mouseout', function (close) {
+        this.closePopup();
+      });
   })
 }
 
 function dateToEpoch(date) {
   return Date.parse(date);
 }
+
+let newArray = [];
 
 function filterCircles(geoMap, array, afterQuery, beforeQuery, aboveQuery, belowQuery) {
   newArray = [];
@@ -73,6 +87,7 @@ async function mainEvent() {
   const textMagAbove = document.querySelector('#above');
   const textMagBelow = document.querySelector('#below');
   const resetButton = document.querySelector('#reset_button');
+  const refreshButton = document.querySelector('#refresh_button');
 
   var afterText = '';
   var beforeText = '';
@@ -80,18 +95,14 @@ async function mainEvent() {
   var belowText = '';
 
   let geoMap = initMap();
+  geoMap.setMinZoom(1);
 
   if (localStorage.getItem('storedData') === null) {
-    const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=0000-01-01&endtime=2100-01-01&minmagnitude=7.5');
-    const currentData = await results.json();
-    console.log(typeof currentData);
-    localStorage.setItem('storedData', JSON.stringify(currentData));
+    storeOrginalData();
   }
   const storedData = localStorage.getItem('storedData');
-
   let parsedData = JSON.parse(storedData);
   elements = parsedData.features;
-
   placeCircle(elements, geoMap);
 
   textAfter.addEventListener('input', (event) => {
@@ -124,25 +135,37 @@ async function mainEvent() {
     } else {
       beforeQuery = Math.floor(Date.now());
     }
-    if (aboveText.length != 0) {
+    if (aboveText.length != 0 && aboveText >= 7.5) {
       aboveQuery = aboveText;
     } else {
-      aboveQuery = -2; //-1.4 is the min magnitude, but smaller magnitudes can be recorded in the future
+      aboveQuery = 7.5; //7.5 is the min magnitude
     }
     if (belowText.length != 0) {
       belowQuery = belowText;
     } else {
-      belowQuery = 10; //7.1 is the max magnitude, but larger magnitudes can be recorded in the future
+      belowQuery = 10;
     }
     filterCircles(geoMap, elements, afterQuery, beforeQuery, aboveQuery, belowQuery);
     //call with 'elements' as array
   });
 
-  resetButton.addEventListener("click", (event) => {
-//    filterCircles('', '', '', '', geoMap);
+  resetButton.addEventListener("click", async (event) => {
+    storeOrginalData();
     var textInputs = document.querySelectorAll('input');
     textInputs.forEach(input => input.value = '');
-});
+    const storedData = localStorage.getItem('storedData');
+    let parsedData = JSON.parse(storedData);
+    elements = parsedData.features; 
+    placeCircle(elements, geoMap);
+  });
+
+  refreshButton.addEventListener("click", (event) => {
+    console.log(newArray);
+    if (newArray.length !== 0) {
+      localStorage.removeItem('storedData');
+      localStorage.setItem('storedData', JSON.stringify(newArray));
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', async () => mainEvent());
