@@ -71,15 +71,16 @@ async function mainEvent() {
 
   let geoMap = initMap();
 
-  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson');
+  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2000-01-01&endtime=2023-05-10&minmagnitude=6');
   const currentData = await results.json();
   console.log(typeof currentData);
 
   elements = currentData.features;
-  console.log('elements type', typeof elements);
-//  localStorage.setItem('storedData', JSON.stringify(elements));
+
+//  localStorage.setItem('storedData', JSON.stringify(currentData));
 //  const storedData = localStorage.getItem('storedData');
 //  console.log('storedData type', typeof storedData)
+
   placeCircle(elements, geoMap);
 
   textAfter.addEventListener('input', (event) => {
@@ -127,7 +128,7 @@ async function mainEvent() {
   });
 
   resetButton.addEventListener("click", (event) => {
-    filterCircles('', '', '', '', geoMap);
+//    filterCircles('', '', '', '', geoMap);
     var textInputs = document.querySelectorAll('input');
     textInputs.forEach(input => input.value = '');
 });
