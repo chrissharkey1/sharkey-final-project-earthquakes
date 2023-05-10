@@ -23,16 +23,16 @@
   <body>
     <div>
       <header>
-        <h1>Earthquake Tracking - Chris Sharkey</h1>
+        <h1><u>Largest Earthquakes</u></h1>
       </header>
       <div>
-        <h2><u>Interactive Map</u></h2>
-        <h3>Filter earthquake results</h3>
+        <p><button type="button" id="refresh_button">Refresh page</button> — Sets default as current filtered dataset</p>
+        <h2>Magnitude 7.5 and higher</h2>
       </div>
       <div id="map"></div>
       <div id="inputs">
         <p>
-          <i>All dates must be entered in YYYY-MM-DD format below.</i><br /><br />
+          <br />
           Earthquakes after
           <input type="date" id="after" name="after" />
           and before
