@@ -36,7 +36,7 @@ function placeCircle(array, map) {
       //adjusts magnitude to be judged by size on map
       adjustedMagnitude = magnitude * 23000;
 
-      //adjusts fillOpacity based on magnitude -> 7 is the min magnitude in the JSON
+      //adjusts fillOpacity based on magnitude -> 7.5 is the min magnitude in the JSON
       adjustedFill = (magnitude + 1.5) / 15;
 
       const circle = L.circle([coordinates[1], coordinates[0]], {
