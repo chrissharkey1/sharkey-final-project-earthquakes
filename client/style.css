@@ -1,12 +1,37 @@
+/* "Ocean Breeze UI Color Palette" used for project. Located at https://www.color-hex.com/color-palette/1025415 */ 
+
+* {
+  font-family: 'verdana';
+}
+
+html {
+  background-color: #f0d1b2;
+}
+
+/* Text and headers */
+.home_header {
+  display: block;
+  color: #222222;
+  text-align: center;
+}
+
+.box {
+  width: fit-content;
+  height: fit-content;
+  padding: 5rem;
+  margin: 0 auto;
+}
+
+#filter_guide {
+  display: block;
+  text-align: center;
+}
+
+/* Leaflet features */
 #map {
-    width: 500px;
-    height: 500px;
-    margin-bottom: 1rem;
-  }
-#map {
-  width: 500px;
+  width: 700px;
   height: 500px;
-  margin-bottom: 1rem;
+  margin: auto;
 }
 
 .leaflet-popup {
@@ -23,5 +48,71 @@
   max-height: 100%;
   overflow: auto;
   text-align: justify;
-  color: #d60000
+  color: #324a5f;
+}
+
+/* Buttons */
+.button {
+  background: #324a5f;
+  border: 1px solid #324a5f;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #f3f3f3;
+  display: inline-block;
+  
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  min-height: 40px;
+  padding: 10px 16px;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: initial;
+  background-position: 0 0;
+  color: #324a5f;
+}
+
+.button_div {
+  display: block;
+  text-align: center;
+}
+
+/* Navigation */
+.navigation_bar {
+  display: block;
+  text-align: center;
+  padding: 20px 20px;
+}
+
+.nav {
+  background-color: #324a5f;
+  overflow: hidden;
+}
+
+.nav a {
+  text-align: center;
+  float: left;
+  color: #ffffff;
+  padding: 16px 20px;
+  font-size: 20px;
+  border: 1px solid #f0d1b2;
+}
+
+.nav a:hover {
+  background-color: #70b9b0;
+}
+
+.nav a.current {
+  background-color: #70b9b0;
+}
+
+/* Inputs */
+input {
+  background-color: #f3f3f3;
+  color: #222222;
 }
