@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Earthquake Tracking - Chris Sharkey</title>
+    <title>The World's Largest Earthquakes</title>
 
     <link
       rel="stylesheet"
@@ -21,17 +21,25 @@
     ></script>
   </head>
   <body>
+    <div class="navigation_bar">
+      <nav class="nav">
+        <a href="./home.html" class="current">Home</a>
+        <a href="./about.html" id="about_page">About</a>
+      </nav>
+    </div>
     <div>
+      <div class="button_div">
+        <button type="button" id="refresh_button" class="button">Refresh page</button>
+      </div>
       <header>
-        <h1><u>Largest Earthquakes</u></h1>
+        <h1 class="home_header"><b>The world's largest earthquakes throughout history</b></h1>
       </header>
       <div>
-        <p><button type="button" id="refresh_button">Refresh page</button> — Sets default as current filtered dataset</p>
-        <h2>Magnitude 7.5 and higher</h2>
+        <h2 class="home_header">Magnitude 7.5 and higher</h2>
       </div>
       <div id="map"></div>
       <div id="inputs">
-        <p>
+        <p id="filter_guide">
           <br />
           Earthquakes after
           <input type="date" id="after" name="after" />
@@ -42,10 +50,12 @@
           and below
           <input type="text" id="below" name="below" />
         </p>
-        <button type="button" id="filter_button">Filter</button>
-        <button type="button" id="reset_button">Reset Data</button><br /><br />
+        <div class="button_div">
+          <button type="button" id="filter_button" class="button">Filter</button>
+          <button type="button" id="reset_button" class="button">Reset Data</button><br /><br />
+        </div>
       </div>
     </div>
-    <script src="./script.js"></script>
+    <script src="./home_script.js"></script>
   </body>
 </html>
