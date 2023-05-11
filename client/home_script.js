@@ -6,7 +6,14 @@ function initMap() {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(geoMap);
+  geoMap.setMaxBounds(L.latLngBounds([[-80, -320], [80, 320]]));
   return geoMap;
+}
+
+async function storeOrginalData() {
+    const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=0000-01-01&endtime=2100-01-01&minmagnitude=7.5');
+    const currentData = await results.json();
+    localStorage.setItem('storedData', JSON.stringify(currentData));
 }
 
 function placeCircle(array, map) {
@@ -19,25 +26,43 @@ function placeCircle(array, map) {
   array.forEach((item) => {
       const {coordinates} = item.geometry;
       const magnitude = item.properties.mag;
+      const place = item.properties.place;
+
+      var epochSeconds = item.properties.time;
+      var epochMilli = epochSeconds / 1000;
+      var date = new Date(0);
+      date.setUTCSeconds(epochMilli);
 
       //adjusts magnitude to be judged by size on map
-      adjustedMagnitude = magnitude * 25000;
+      adjustedMagnitude = magnitude * 23000;
 
-      //adjusts fillOpacity based on magnitude -> -1.4 is the min magnitude in the JSON, max is 7.1
-      adjustedFill = (magnitude + 1.5) / 8.6;
+      //adjusts fillOpacity based on magnitude -> 7 is the min magnitude in the JSON
+      adjustedFill = (magnitude + 1.5) / 15;
 
       const circle = L.circle([coordinates[1], coordinates[0]], {
-        color: 'red',
-        fillColor: 'black',
+        color: '#222222',
+        fillColor: '#f0d1b2',
         fillOpacity: adjustedFill,
         radius: adjustedMagnitude,
       }).addTo(map);
+
+      var popup = L.popup().setContent('(' + coordinates[1] + ', ' + coordinates[0] + ')<br> Magnitude: ' + 
+        magnitude + '<br> Timestamp: ' + date + '<br> Place: ' + place);
+      circle.bindPopup(popup);
+      circle.on('mouseover', function (open) {
+        this.openPopup();
+      });
+      circle.on('mouseout', function (close) {
+        this.closePopup();
+      });
   })
 }
 
 function dateToEpoch(date) {
   return Date.parse(date);
 }
+
+let newArray = [];
 
 function filterCircles(geoMap, array, afterQuery, beforeQuery, aboveQuery, belowQuery) {
   newArray = [];
@@ -63,6 +88,8 @@ async function mainEvent() {
   const textMagAbove = document.querySelector('#above');
   const textMagBelow = document.querySelector('#below');
   const resetButton = document.querySelector('#reset_button');
+  const refreshButton = document.querySelector('#refresh_button');
+  const aboutPageButton = document.querySelector('#about_page');
 
   var afterText = '';
   var beforeText = '';
@@ -70,17 +97,14 @@ async function mainEvent() {
   var belowText = '';
 
   let geoMap = initMap();
+  geoMap.setMinZoom(1);
 
-  const results = await fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2000-01-01&endtime=2023-05-10&minmagnitude=6');
-  const currentData = await results.json();
-  console.log(typeof currentData);
-
-  elements = currentData.features;
-
-//  localStorage.setItem('storedData', JSON.stringify(currentData));
-//  const storedData = localStorage.getItem('storedData');
-//  console.log('storedData type', typeof storedData)
-
+  if (localStorage.getItem('storedData') === null) {
+    storeOrginalData();
+  }
+  const storedData = localStorage.getItem('storedData');
+  let parsedData = JSON.parse(storedData);
+  elements = parsedData.features;
   placeCircle(elements, geoMap);
 
   textAfter.addEventListener('input', (event) => {
@@ -116,22 +140,41 @@ async function mainEvent() {
     if (aboveText.length != 0) {
       aboveQuery = aboveText;
     } else {
-      aboveQuery = -2; //-1.4 is the min magnitude, but smaller magnitudes can be recorded in the future
+      aboveQuery = 7.5; //7.5 is the min magnitude
     }
     if (belowText.length != 0) {
       belowQuery = belowText;
     } else {
-      belowQuery = 10; //7.1 is the max magnitude, but larger magnitudes can be recorded in the future
+      belowQuery = 10;
     }
     filterCircles(geoMap, elements, afterQuery, beforeQuery, aboveQuery, belowQuery);
     //call with 'elements' as array
   });
 
-  resetButton.addEventListener("click", (event) => {
-//    filterCircles('', '', '', '', geoMap);
+  resetButton.addEventListener("click", async (event) => {
     var textInputs = document.querySelectorAll('input');
     textInputs.forEach(input => input.value = '');
-});
+    afterText = '';
+    beforeText = '';
+    aboveText = '';
+    belowText = '';
+    storeOrginalData();
+    const storedData = localStorage.getItem('storedData');
+    let parsedData = JSON.parse(storedData);
+    elements = parsedData.features;
+    geoMap.setView([0, 0], 1);
+    placeCircle(elements, geoMap);
+  });
+
+  refreshButton.addEventListener("click", (event) => {
+    localStorage.clear();
+    storeOrginalData();
+  });
+
+  aboutPageButton.addEventListener("click", (event) => {
+    console.log('about page clicked');
+    window.location.href="./about.html";
+  });
 }
 
 document.addEventListener('DOMContentLoaded', async () => mainEvent());

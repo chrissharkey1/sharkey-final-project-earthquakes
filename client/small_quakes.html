@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The World's Smallest Earthquakes</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <div class="navigation_bar">
+      <nav class="nav">
+        <a href="./big_quakes.html" id="big_quakes">BIGGEST EARTHQUAKES</a>
+        <a href="./small_quakes.html" class="current">smallest earthquakes</a>
+        <a href="./about.html" id="about_page">About</a>
+      </nav>
+    </div>
+    <div>
+      <div class="button_div">
+        <button type="button" id="refresh_button" class="button">Refresh page</button>
+      </div>
+      <header>
+        <h1 class="home_header"><b>The world's smallest earthquakes throughout history</b></h1>
+      </header>
+      <div>
+        <h2 class="home_header">Magnitude 7.5 and higher</h2>
+      </div>
+      <div id="map"></div>
+      <div id="inputs">
+        <p id="filter_guide">
+          <br />
+          Earthquakes after
+          <input type="date" id="after" name="after" />
+          and before
+          <input type="date" id="before" name="before" /><br />
+          with a magnitude above
+          <input type="text" id="above" name="above" />
+          and below
+          <input type="text" id="below" name="below" />
+        </p>
+        <div class="button_div">
+          <button type="button" id="filter_button" class="button">Filter</button>
+          <button type="button" id="reset_button" class="button">Reset Data</button><br /><br />
+        </div>
+      </div>
+    </div>
+    <script src="./small_script.js"></script>
+  </body>
+</html>

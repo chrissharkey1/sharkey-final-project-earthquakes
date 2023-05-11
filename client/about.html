@@ -1,0 +1,63 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Earthquake Tracking - Chris Sharkey</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="navigation_bar">
+        <nav class="nav">
+            <a href="./home.html" id="home">Home</a>
+            <a href="./about.html" class="current">About</a>
+        </nav>
+    </div>
+    <div class="box">
+      <header class="home_header">
+        <h1><u>About</u></h1>
+      </header>
+      <div>
+        <h2 class="about_header">The idea</h2>
+      </div>
+      <div id="about_text">
+        <p>
+            My name is Chris Sharkey and I developed this project to explore earthquake occurrences across the globe
+            through visualization.
+            This website aims to display the largest earthquakes over history through an interactive mapping interface
+            powered by <a href="https://leafletjs.com/">Leaflet.js</a>. 
+            The data is sourced from the Earthquake Hazards Program from the United States Geological Survey (USGS).
+            The API they provide to developers is located at 
+            <a href="https://earthquake.usgs.gov/fdsnws/event/1/">https://earthquake.usgs.gov/fdsnws/event/1/</a>.
+        </p>
+        <h2 class="about_header">Use</h2>
+        <p>
+            To use this site, you must first navigate to the home page, where the interactive visualization is located. 
+            The map in the center of the page will include all data points of recorded evidence of earthquakes with
+            a magnitude above (or equal to) 7.5. Earthquakes over a magnitude of 7.5 or higher are noted as major or 
+            great earthquakes that have the potential to cause large amounts of damage. 
+            Amazingly, this data actually goes begins at the year 1700!
+        </p>
+        <p>
+            Each circle on the map represents an earthquake, with larger earthquakes having a larger radius. If you
+            hover over any circle you will be able to view its relevant data. This includes the coordinates of its
+            occurence, the magnitude, the time it occurred, and a description of the location.
+        </p>
+        <h2 class="about_header">Filtering</h2>
+        <p>
+            Below the map window there are filters for both the date and magnitude where you will be able to explore the data.
+            Magnitudes entered must be numbers (with or without decimals) and the date can follow the MM/DD/YYYY pattern
+            as displayed. In order to filter the data based on the magnitude, be sure to include numbers greater than
+            7.5 in order to display the desired information, since the lowest magnitude in the dataset is 7.5.
+            Once you have decided how to filter the data, click the <i>Filter</i> button and you will receive your results.
+        </p>
+        <h2>Resetting the data</h2>
+        <p>
+            After filtering the data, all you need to do to return to the original dataset is click the <i>Reset Data</i>
+            button. This will make the visualization zoom back out to the globe view as well.
+        </p>
+      </div>
+    </div>
+    <script src="./about_script.js"></script>
+  </body>
+</html>
