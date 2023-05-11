@@ -92,11 +92,11 @@ html {
 .nav {
   background-color: #324a5f;
   overflow: hidden;
+  padding: 30px 30px;
 }
 
 .nav a {
   text-align: center;
-  float: left;
   color: #ffffff;
   padding: 16px 20px;
   font-size: 20px;
