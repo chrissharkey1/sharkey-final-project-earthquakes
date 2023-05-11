@@ -6,6 +6,7 @@ function initMap() {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(geoMap);
+  geoMap.setMaxBounds(L.latLngBounds([[-80, -320], [80, 320]]));
   return geoMap;
 }
 
@@ -33,14 +34,14 @@ function placeCircle(array, map) {
       date.setUTCSeconds(epochMilli);
 
       //adjusts magnitude to be judged by size on map
-      adjustedMagnitude = magnitude * 22000;
+      adjustedMagnitude = magnitude * 23000;
 
       //adjusts fillOpacity based on magnitude -> 7 is the min magnitude in the JSON
-      adjustedFill = (magnitude + 1.5) / 12;
+      adjustedFill = (magnitude + 1.5) / 15;
 
       const circle = L.circle([coordinates[1], coordinates[0]], {
-        color: 'red',
-        fillColor: 'black',
+        color: '#222222',
+        fillColor: '#f0d1b2',
         fillOpacity: adjustedFill,
         radius: adjustedMagnitude,
       }).addTo(map);
@@ -88,6 +89,7 @@ async function mainEvent() {
   const textMagBelow = document.querySelector('#below');
   const resetButton = document.querySelector('#reset_button');
   const refreshButton = document.querySelector('#refresh_button');
+  const aboutPageButton = document.querySelector('#about_page');
 
   var afterText = '';
   var beforeText = '';
@@ -135,7 +137,7 @@ async function mainEvent() {
     } else {
       beforeQuery = Math.floor(Date.now());
     }
-    if (aboveText.length != 0 && aboveText >= 7.5) {
+    if (aboveText.length != 0) {
       aboveQuery = aboveText;
     } else {
       aboveQuery = 7.5; //7.5 is the min magnitude
@@ -150,21 +152,28 @@ async function mainEvent() {
   });
 
   resetButton.addEventListener("click", async (event) => {
-    storeOrginalData();
     var textInputs = document.querySelectorAll('input');
     textInputs.forEach(input => input.value = '');
+    afterText = '';
+    beforeText = '';
+    aboveText = '';
+    belowText = '';
+    storeOrginalData();
     const storedData = localStorage.getItem('storedData');
     let parsedData = JSON.parse(storedData);
-    elements = parsedData.features; 
+    elements = parsedData.features;
+    geoMap.setView([0, 0], 1);
     placeCircle(elements, geoMap);
   });
 
   refreshButton.addEventListener("click", (event) => {
-    console.log(newArray);
-    if (newArray.length !== 0) {
-      localStorage.removeItem('storedData');
-      localStorage.setItem('storedData', JSON.stringify(newArray));
-    }
+    localStorage.clear();
+    storeOrginalData();
+  });
+
+  aboutPageButton.addEventListener("click", (event) => {
+    console.log('about page clicked');
+    window.location.href="./about.html";
   });
 }
 
