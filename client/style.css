@@ -29,8 +29,8 @@ html {
 
 /* Leaflet features */
 #map {
-  width: 700px;
-  height: 500px;
+  width: 40vw;
+  height: 50%;
   margin: auto;
 }
 
