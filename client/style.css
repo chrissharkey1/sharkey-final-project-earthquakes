@@ -37,7 +37,7 @@ html {
 
 /* Leaflet features */
 #map {
-  width: 90vh;
+  width: 70vh;
   height: 50%;
   margin: auto;
 }
@@ -94,6 +94,7 @@ html {
 .navigation_bar {
   display: block;
   text-align: center;
+  width: 100%;
   padding: 20px 20px;
 }
 
@@ -123,4 +124,12 @@ html {
 input {
   background-color: #f3f3f3;
   color: #222222;
+}
+
+/* Screen sizing */
+@media only screen and (max-width: 600px) {
+  #map {
+    width: 90%;
+    margin: auto;
+  }
 }
