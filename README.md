@@ -12,3 +12,6 @@ The goal of the project is to display the largest earthquakes of the dataset, pa
 
 No CSS frameworks were used, all CSS code was written from scratch.
 Map visualization library: Leaflet.js: https://leafletjs.com/
+
+Notes:
+Image on about page was sourced from thenounproject.com icons. Link: https://static.thenounproject.com/png/4232-200.png
