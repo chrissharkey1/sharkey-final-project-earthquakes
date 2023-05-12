@@ -27,9 +27,17 @@ html {
   text-align: center;
 }
 
+/* Image */
+#seismic_png {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 8%;
+}
+
 /* Leaflet features */
 #map {
-  width: 40vw;
+  width: 90vh;
   height: 50%;
   margin: auto;
 }
